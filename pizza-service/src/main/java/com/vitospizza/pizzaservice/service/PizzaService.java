@@ -14,5 +14,5 @@ public interface PizzaService {
 
     PizzaResponse createPizza(PizzaRequest pizzaRequest);
     List<PizzaResponse> getAllPizza();
-    PizzaResponse getPizzaById() throws PizzaNotFoundException;
+    PizzaResponse getPizzaById(String id) throws PizzaNotFoundException;
 }
