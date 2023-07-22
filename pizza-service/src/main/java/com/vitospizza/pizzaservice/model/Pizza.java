@@ -1,11 +1,15 @@
 package com.vitospizza.pizzaservice.model;
 
 import lombok.*;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 
-@Document(value = "pizza")
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,6 +17,8 @@ import java.math.BigDecimal;
 @Builder
 public class Pizza implements SuperModel {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private String id;
     private String name;
     private String description;

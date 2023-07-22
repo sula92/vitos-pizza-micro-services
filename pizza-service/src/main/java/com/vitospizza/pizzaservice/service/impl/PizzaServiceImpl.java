@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +24,7 @@ public class PizzaServiceImpl implements PizzaService {
     @Override
     public PizzaResponse createPizza(PizzaRequest pizzaRequest) {
         Pizza pizza = Pizza.builder()
+                .id(UUID.randomUUID().toString())
                 .name(pizzaRequest.getName())
                 .description(pizzaRequest.getDescription())
                 .price(pizzaRequest.getPrice())
