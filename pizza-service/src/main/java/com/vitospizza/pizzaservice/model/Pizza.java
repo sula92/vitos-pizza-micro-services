@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 public class Pizza implements SuperModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE)
     private String id;
     private String name;
     private String description;

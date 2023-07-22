@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -27,7 +28,7 @@ public class PizzaController {
     @Autowired
     private PizzaService pizzaService;
 
-    @PostMapping("Pizza")
+    @PostMapping
     public ResponseEntity<StandardResponse> createPizza(@RequestBody PizzaRequest pizzaRequest) {
         log.trace("PizzaController - createPizza - Pizza {}", pizzaRequest);
         PizzaResponse PizzaResponse = pizzaService.createPizza(pizzaRequest);
@@ -37,6 +38,10 @@ public class PizzaController {
         );
     }
 
-
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<PizzaResponse> getAllProducts() {
+        return pizzaService.getAllPizza();
+    }
 
 }
