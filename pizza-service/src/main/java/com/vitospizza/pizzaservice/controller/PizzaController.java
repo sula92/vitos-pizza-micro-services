@@ -44,4 +44,24 @@ public class PizzaController {
         return pizzaService.getAllPizza();
     }
 
+    @PutMapping
+    public ResponseEntity<StandardResponse> editPizza(@RequestBody PizzaRequest pizzaRequest) {
+        log.trace("PizzaController - editPizza - Pizza {}", pizzaRequest);
+        PizzaResponse PizzaResponse = pizzaService.createPizza(pizzaRequest);
+
+        return new ResponseEntity<StandardResponse>(
+                new StandardResponse(201, "Pizza Updated Successfully", pizzaRequest), HttpStatus.CREATED
+        );
+    }
+
+    @DeleteMapping
+    public ResponseEntity<StandardResponse> deletePizza(@RequestBody PizzaRequest pizzaRequest) {
+        log.trace("PizzaController - editPizza - Pizza {}", pizzaRequest);
+        PizzaResponse PizzaResponse = pizzaService.createPizza(pizzaRequest);
+
+        return new ResponseEntity<StandardResponse>(
+                new StandardResponse(201, "Pizza Updated Successfully", pizzaRequest), HttpStatus.CREATED
+        );
+    }
+
 }
