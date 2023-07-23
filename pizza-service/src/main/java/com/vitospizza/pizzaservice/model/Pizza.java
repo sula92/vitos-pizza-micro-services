@@ -22,6 +22,8 @@ public class Pizza implements SuperModel {
     private String id;
     private String name;
     private String description;
+    private int availableQuantity;
     private BigDecimal price;
+    private String imageUrl;
 
 }

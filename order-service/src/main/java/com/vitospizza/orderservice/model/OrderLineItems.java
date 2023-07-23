@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderLineItems {
+public class OrderLineItems implements SuperModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

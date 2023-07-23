@@ -14,5 +14,7 @@ import java.math.BigDecimal;
 public class PizzaRequest {
     private String name;
     private String description;
+    private int quantity;
     private BigDecimal price;
+    private String imageUrl;
 }

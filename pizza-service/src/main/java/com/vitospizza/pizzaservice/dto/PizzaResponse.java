@@ -18,5 +18,7 @@ public class PizzaResponse {
     private String id;
     private String name;
     private String description;
+    private int availableQuantity;
     private BigDecimal price;
+    private String imageUrl;
 }
