@@ -8,6 +8,7 @@ import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.CompletableFuture;
@@ -22,11 +23,24 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @CircuitBreaker(name = "inventory", fallbackMethod = "fallbackMethod")
-    @TimeLimiter(name = "inventory")
-    @Retry(name = "inventory")
+    @CircuitBreaker(name = "order", fallbackMethod = "fallbackMethod")
+    @TimeLimiter(name = "order")
+    @Retry(name = "order")
     public CompletableFuture<String> placeOrder(@RequestBody OrderRequest orderRequest) {
         log.info("Placing Order");
         return CompletableFuture.supplyAsync(() -> orderService.placeOrder(orderRequest));
+    }
+
+    @GetMapping
+    public Boolean isUserLogin(){
+        return orderService.checkUserLogin();
+
+    }
+
+    public CompletableFuture<ResponseEntity<StandardResponse>> fallBackMethodOrder(@PathVariable("id") String OrderId, RuntimeException runtimeException) {
+        log.warn("OrderController - fallBackMethodOrder");
+        return CompletableFuture.supplyAsync(() -> new ResponseEntity<StandardResponse>(
+                new StandardResponse(503, "User Service Unavailable", null), HttpStatus.SERVICE_UNAVAILABLE
+        ));
     }
 }

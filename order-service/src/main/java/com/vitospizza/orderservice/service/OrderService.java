@@ -7,5 +7,6 @@ import org.springframework.context.annotation.Lazy;
 public interface OrderService {
 
     public String placeOrder(OrderRequest orderRequest);
+    public Boolean checkUserLogin();
 
 }
