@@ -2,6 +2,7 @@ package com.vitospizza.orderservice.controller;
 
 import com.vitospizza.orderservice.dto.OrderRequest;
 import com.vitospizza.orderservice.service.OrderService;
+import com.vitospizza.orderservice.util.StandardResponse;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
@@ -37,7 +38,7 @@ public class OrderController {
 
     }
 
-    public CompletableFuture<ResponseEntity<StandardResponse>> fallBackMethodOrder(@PathVariable("id") String OrderId, RuntimeException runtimeException) {
+    public CompletableFuture<ResponseEntity<StandardResponse>> fallBackMethodOrder() {
         log.warn("OrderController - fallBackMethodOrder");
         return CompletableFuture.supplyAsync(() -> new ResponseEntity<StandardResponse>(
                 new StandardResponse(503, "User Service Unavailable", null), HttpStatus.SERVICE_UNAVAILABLE
