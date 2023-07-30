@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,9 +30,9 @@ public class OrderServiceImpl implements OrderService {
     private WebClient webClient;
 
     @Override
-    public String placeOrder(OrderRequest orderRequest) {
+    public String placeOrder(List<OrderLineItemsDto> orderLineItemsDtos, String sessionId) {
 
-        if(!checkUserLogin()){
+        if(checkUserLogin(sessionId)){
             log.info("User has not login");
             return "Please Login to Place an Order";
         }
@@ -39,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setOrderNumber(UUID.randomUUID().toString());
 
-        List<OrderLineItems> orderLineItems = orderRequest.getOrderLineItemsDtoList()
+        List<OrderLineItems> orderLineItems = orderLineItemsDtos
                 .stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
@@ -56,14 +57,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @SneakyThrows
-    public Boolean checkUserLogin() {
-        /*return webClientBuilder.build().post()
-                .uri("http://localhost:8090/api/users/login")
-                .retrieve()
-                .bodyToMono(Boolean.class)
-                .block();*/
-        return webClient.get()
-                .uri("/api/test")
+    @Override
+    public Boolean checkUserLogin(String sessionId) {
+
+        return webClient.post()
+                .uri("/api/users/login/check")
+                .body(Mono.just(sessionId),String.class)
                 .retrieve()
                 .bodyToMono(Boolean.class)
                 .block();

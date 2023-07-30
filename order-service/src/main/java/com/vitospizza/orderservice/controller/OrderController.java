@@ -1,5 +1,6 @@
 package com.vitospizza.orderservice.controller;
 
+import com.vitospizza.orderservice.dto.OrderLineItemsDto;
 import com.vitospizza.orderservice.dto.OrderRequest;
 import com.vitospizza.orderservice.service.OrderService;
 import com.vitospizza.orderservice.util.StandardResponse;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -27,14 +29,17 @@ public class OrderController {
     @CircuitBreaker(name = "order", fallbackMethod = "fallbackMethod")
     @TimeLimiter(name = "order")
     @Retry(name = "order")
-    public CompletableFuture<String> placeOrder(@RequestBody OrderRequest orderRequest) {
+    public CompletableFuture<String> placeOrder(
+            @RequestBody List<OrderLineItemsDto> orderLineItemsDtos,
+            @RequestHeader String sessionId
+    ) {
         log.info("Placing Order");
-        return CompletableFuture.supplyAsync(() -> orderService.placeOrder(orderRequest));
+        return CompletableFuture.supplyAsync(() -> orderService.placeOrder(orderLineItemsDtos,sessionId));
     }
 
     @GetMapping
-    public Boolean isUserLogin(){
-        return orderService.checkUserLogin();
+    public Boolean isUserLogin(@RequestHeader String sessionId){
+        return orderService.checkUserLogin(sessionId);
 
     }
 

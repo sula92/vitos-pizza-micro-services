@@ -2,6 +2,8 @@ package com.vitospizza.userservice.controller;
 
 
 import com.vitospizza.userservice.dto.UserLoginDTO;
+import com.vitospizza.userservice.model.Session;
+import com.vitospizza.userservice.model.User;
 import com.vitospizza.userservice.model.UserRepository;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.Random;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(
@@ -41,20 +45,29 @@ public class UserController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @SneakyThrows
-    public String  login(/*@RequestBody UserLoginDTO userLoginDTO*/){
+    public String  login(@RequestBody UserLoginDTO userLoginDTO){
 
-        /*System.out.println("hhhhhhhhhhhhhhh");
+        System.out.println("hhhhhhhhhhhhhhh");
         System.out.println(userLoginDTO.getUserName());
         System.out.println(userLoginDTO.getPassword());
 
 
-         userRepository.findAll().stream().anyMatch(
+         boolean isUserExist= userRepository.findAll().stream().anyMatch(
                 user -> user.getUserName().equalsIgnoreCase(userLoginDTO.getUserName())
                         &
                         user.getPassword().equalsIgnoreCase(userLoginDTO.getPassword())
-        );*/
+        );
 
-         return "";
+         if (isUserExist){
+             Session.password=userLoginDTO.getPassword();
+             Session.userName=userLoginDTO.getUserName();
+             Session.sessionId=generateSessionId();
+             return Session.sessionId;
+         }
+
+         return "invalid";
+
+
        /* for (User user:users) {
             if(user.getUserName().equalsIgnoreCase(userLoginDTO.getUserName()) &
                     user.getPassword().equalsIgnoreCase(userLoginDTO.getPassword()) &
@@ -71,6 +84,25 @@ public class UserController {
         }*/
         //return new UserInfoDTO("error", errorPage, "error");
 
+    }
+
+    @GetMapping("/logout")
+    public void logOut(){
+        Session.password="";
+        Session.userName="";
+        Session.privilege="";
+        Session.sessionId="";
+    }
+
+    @PostMapping("users/login/check")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean checkUserLogin(@RequestBody String sessionId){
+        System.out.println("SSSSSSSSSSSSS"+sessionId);
+        return Session.sessionId.equalsIgnoreCase(sessionId);
+    }
+
+    private String generateSessionId(){
+        return UUID.randomUUID().toString();
     }
 
     @GetMapping("/test")
