@@ -26,15 +26,16 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @CircuitBreaker(name = "order", fallbackMethod = "fallbackMethod")
+    /*@CircuitBreaker(name = "order", fallbackMethod = "fallBackMethodOrder")
     @TimeLimiter(name = "order")
-    @Retry(name = "order")
-    public CompletableFuture<String> placeOrder(
+    @Retry(name = "order")*/
+    public String placeOrder(
             @RequestBody List<OrderLineItemsDto> orderLineItemsDtos,
             @RequestHeader String sessionId
     ) {
-        log.info("Placing Order");
-        return CompletableFuture.supplyAsync(() -> orderService.placeOrder(orderLineItemsDtos,sessionId));
+        System.out.println("XXXXXXXXXXXXXXXXXXXxxx"+sessionId);
+        log.info("Placing Order"+orderLineItemsDtos.toString());
+        return  orderService.placeOrder(orderLineItemsDtos,sessionId);
     }
 
     @GetMapping
@@ -43,10 +44,8 @@ public class OrderController {
 
     }
 
-    public CompletableFuture<ResponseEntity<StandardResponse>> fallBackMethodOrder() {
+    public StandardResponse fallBackMethodOrder() {
         log.warn("OrderController - fallBackMethodOrder");
-        return CompletableFuture.supplyAsync(() -> new ResponseEntity<StandardResponse>(
-                new StandardResponse(503, "User Service Unavailable", null), HttpStatus.SERVICE_UNAVAILABLE
-        ));
+        return  new StandardResponse(503,"Service Unavailable","");
     }
 }

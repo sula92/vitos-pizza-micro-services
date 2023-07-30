@@ -31,8 +31,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String placeOrder(List<OrderLineItemsDto> orderLineItemsDtos, String sessionId) {
+        System.out.println("KKKKKKKKKKkk"+sessionId);
 
-        if(checkUserLogin(sessionId)){
+        if(!checkUserLogin(sessionId)){
             log.info("User has not login");
             return "Please Login to Place an Order";
         }
@@ -51,14 +52,15 @@ public class OrderServiceImpl implements OrderService {
                 .map(OrderLineItems::getSkuCode)
                 .collect(Collectors.toList());
 
-        orderRepository.save(order);
+         orderRepository.save(order);
+        return "Order has been placed successfully";
 
-        return null;
     }
 
     @SneakyThrows
     @Override
     public Boolean checkUserLogin(String sessionId) {
+        System.out.println("GGGGGGG"+sessionId);
 
         return webClient.post()
                 .uri("/api/users/login/check")
